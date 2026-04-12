@@ -7,6 +7,7 @@
   "scripts": {
     "tsc": "tsc",
     "calculateBmi": "cd bmi && tsc && node bmiCalculator.ts",
+    "calculateExercises": "cd exercise && tsc && node exerciseCalculator.ts",
     "ts-node": "ts-node"
   },
   "author": "",
