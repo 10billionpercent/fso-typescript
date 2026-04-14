@@ -1,4 +1,4 @@
-import isNotNumber from '../utils';
+import isNotNumber from '../utils.ts';
 
 interface Result {
     periodLength: number;
