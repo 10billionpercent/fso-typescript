@@ -6,7 +6,7 @@ const calculateBmi = (height: number, weight: number) : string => {
     if (bmi < 18.5) {
         return "Underweight";
     }
-    else if (bmi <= 24.9 && bmi >= 18.5) {
+    else if (bmi <= 24.9) {
         return "Normal range";
     }
     else {
@@ -32,8 +32,8 @@ if (isNotNumber(height) || isNotNumber(weight)) {
     process.exit(1);
 }
 
-if (height === 0 || weight === 0) {
-    console.log("please provide non zero values for height and weight");
+if (height <= 0 || weight <= 0) {
+    console.log("height and weight must be positive");
     process.exit(1);
 }
 

@@ -12,15 +12,16 @@ interface Result {
 
 const calculateExercises = (target: number, exercises: number[]) : Result => {
     const average = exercises.reduce((acc, val) => acc + val, 0) / exercises.length;
-    const success = average === target;
+    const success = average >= target;
     const percentage = average / target;
     let rating: number;
     let ratingDescription: string;
+
     if (percentage < 0.3) {
         rating = 1;
         ratingDescription = "try harder";
     } 
-    else if (percentage >= 0.3 && percentage <= 0.9) {
+    else if (percentage <= 0.9) {
         rating = 2;
         ratingDescription = "not bad, could be better";
     }
@@ -32,19 +33,18 @@ const calculateExercises = (target: number, exercises: number[]) : Result => {
     return {
         periodLength: exercises.length,
         trainingDays: exercises.filter(d => d !== 0).length,
-        success: success,
-        rating: rating,
-        ratingDescription: ratingDescription,
-        target: target,
-        average: average 
+        success,
+        rating,
+        ratingDescription,
+        target,
+        average 
     }
 }
 
 const target = Number(process.argv[2]);
 let exercises : number[] = [];
-let i : number;
 
-if (process.argv.length <= 4) {
+if (process.argv.length < 4) {
     console.log("too few arguments");
     process.exit(1);
 }
@@ -54,13 +54,14 @@ if (isNotNumber(target)) {
     process.exit(1);
 }
 
-for (i = 3; i < process.argv.length; i++) {
-    if (!isNotNumber(process.argv[i])) {
-        exercises.push(Number(process.argv[i]));
-    }
-    else {
+for (let i = 3; i < process.argv.length; i++) {
+    const value = process.argv[i];
+    if (isNotNumber(value)) {
         console.log("please enter only numbers");
         process.exit(1);
+    }
+    else {
+        exercises.push(Number(value));
     }
 }
 
