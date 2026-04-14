@@ -1,3 +1,5 @@
+import isNotNumber from '../utils';
+
 interface Result {
     periodLength: number;
     trainingDays: number;
@@ -8,7 +10,7 @@ interface Result {
     average: number;
 }
 
-const calculateExercises = (exercises: number[], target: number) : Result => {
+const calculateExercises = (target: number, exercises: number[]) : Result => {
     const average = exercises.reduce((acc, val) => acc + val, 0) / exercises.length;
     const success = average === target;
     const percentage = average / target;
@@ -38,4 +40,28 @@ const calculateExercises = (exercises: number[], target: number) : Result => {
     }
 }
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2));
+const target = Number(process.argv[2]);
+let exercises : number[] = [];
+let i : number;
+
+if (process.argv.length <= 4) {
+    console.log("too few arguments");
+    process.exit(1);
+}
+
+if (isNotNumber(target)) {
+    console.log("please enter only numbers");
+    process.exit(1);
+}
+
+for (i = 3; i < process.argv.length; i++) {
+    if (!isNotNumber(process.argv[i])) {
+        exercises.push(Number(process.argv[i]));
+    }
+    else {
+        console.log("please enter only numbers");
+        process.exit(1);
+    }
+}
+
+console.log(calculateExercises(target, exercises));
