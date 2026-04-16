@@ -10,6 +10,6 @@ const calculateBmi = (height: number, weight: number) : string => {
     else {
         return "Overweight";
     }
-}
+};
 
 export default calculateBmi;

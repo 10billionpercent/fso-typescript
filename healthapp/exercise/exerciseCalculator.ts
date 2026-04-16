@@ -38,11 +38,11 @@ const calculateExercises = (target: number, exercises: number[]) : Result => {
         ratingDescription,
         target,
         average 
-    }
-}
+    };
+};
 
 const target = Number(process.argv[2]);
-let exercises : number[] = [];
+const exercises : number[] = [];
 
 if (process.argv.length < 4) {
     console.log("too few arguments");

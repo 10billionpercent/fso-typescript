@@ -16,7 +16,6 @@ app.get('/hello', (_req, res) => {
 
 app.get('/bmi', (req, res) => {
     const { height, weight } = req.query;
-    console.log(height, weight)
 
     if (!height || !weight || isNotNumber(height) || isNotNumber(weight)) {
         return res.status(400).json({
@@ -31,10 +30,10 @@ app.get('/bmi', (req, res) => {
         bmi: calculatedBmi
     });
 
-})
+});
 
 const PORT = 4000;
 
 app.listen(PORT, () => {
     console.log(`server running on ${PORT}`);
-})
+});
