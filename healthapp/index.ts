@@ -12,13 +12,7 @@ interface exerciseData {
 };
 
 app.get('/hello', (_req, res) => {
-    res.send(`
-        <html>
-        <body style="background-color: black;
-        color: white;">
-        <p> Hello Full Stack! </p>
-        </body>
-        </html>`);
+    res.send('Hello Full Stack!');
 });
 
 app.get('/bmi', (req, res) => {
@@ -32,8 +26,8 @@ app.get('/bmi', (req, res) => {
 
     const calculatedBmi = calculateBmi(Number(height), Number(weight));
     return res.status(200).json({
-        height,
-        weight,
+        height: Number(height),
+        weight: Number(weight),
         bmi: calculatedBmi
     });
 
@@ -44,7 +38,7 @@ app.post('/exercises', (req, res) => {
 
     if (!body || body.daily_exercises === undefined || body.target === undefined) {
         return res.status(400).json({
-            error: "missing parameters"
+            error: "parameters missing"
         });
     }
 
@@ -60,7 +54,7 @@ app.post('/exercises', (req, res) => {
     return res.status(200).json(calculatedExercises);
 });
 
-const PORT = 4000;
+const PORT = 3000;
 
 app.listen(PORT, () => {
     console.log(`server running on ${PORT}`);
