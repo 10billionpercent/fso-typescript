@@ -61,6 +61,7 @@ const AddPatientForm = ({ onCancel, onSubmit }: Props) => {
           fullWidth
           value={ssn}
           onChange={({ target }) => setSsn(target.value)}
+          sx={{ marginTop: 2 }}
         />
         <TextField
           label="Date of birth"
@@ -68,12 +69,14 @@ const AddPatientForm = ({ onCancel, onSubmit }: Props) => {
           fullWidth
           value={dateOfBirth}
           onChange={({ target }) => setDateOfBirth(target.value)}
+          sx={{ marginTop: 2 }}
         />
         <TextField
           label="Occupation"
           fullWidth
           value={occupation}
           onChange={({ target }) => setOccupation(target.value)}
+          sx={{ marginTop: 2 }}
         />
 
         <InputLabel sx={{ marginTop: 2.5 }}>Gender</InputLabel>
@@ -96,10 +99,13 @@ const AddPatientForm = ({ onCancel, onSubmit }: Props) => {
         <Grid container justifyContent="space-between" sx={{ marginTop: 2 }}>
           <Grid size="auto">
             <Button
-              color="secondary"
-              variant="contained"
+              color="primary"
+              variant="outlined"
               type="button"
               onClick={onCancel}
+              sx={{ 'borderWidth': 3, 
+                '&:hover': 3
+              }}
             >
               Cancel
             </Button>
