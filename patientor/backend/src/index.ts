@@ -14,7 +14,6 @@ app.get('/api/ping', (_req, res) => {
 app.use('/api/diagnoses', diagnosisRouter);
 app.use('/api/patients', patientRouter);
 
-
 const PORT = 3000;
 
 app.listen(PORT, () => {
