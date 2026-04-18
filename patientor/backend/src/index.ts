@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import diagnosisRouter from './routes/diagnoses.ts';
+import patientRouter from './routes/patients.ts';
 
 const app = express();
 app.use(express.json());
@@ -11,6 +12,8 @@ app.get('/api/ping', (_req, res) => {
 });
 
 app.use('/api/diagnoses', diagnosisRouter);
+app.use('/api/patients', patientRouter);
+
 
 const PORT = 3000;
 
