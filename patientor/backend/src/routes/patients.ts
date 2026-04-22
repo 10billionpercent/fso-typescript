@@ -1,6 +1,8 @@
-import express from 'express';
+import express, { type Request, type Response, type NextFunction } from 'express';
 import patientService from '../services/patientService.ts';
-import parseNewPatient from '../utils.ts';
+
+import { NewPatientSchema, type NewPatient, type Patient } from '../types.ts';
+import { z } from 'zod';
 
 const router = express.Router();
 
@@ -9,18 +11,28 @@ router.get('/', (_req, res) => {
     res.send(data);
 });
 
-router.post('/', (req, res) => {
+const newPatientParser = (req: Request, _res: Response, next: NextFunction) => {
     try {
-        const newPatient = parseNewPatient(req.body);
-        const addedPatient = patientService.addPatient(newPatient);
-        res.json(addedPatient);
+        NewPatientSchema.parse(req.body);
+        next();
     } catch (error: unknown) {
-        let errorMessage = 'something went wrong. ';
-        if (error instanceof Error) {
-            errorMessage += error.message;
-        }
-        res.status(400).json({error: errorMessage});
+        next(error);
     }
+};
+
+const errorHandler = (error: unknown, _req: Request, res: Response, next: NextFunction) => {
+    if (error instanceof z.ZodError) {
+        res.status(400).send({ error: error.issues });
+    } else {
+        next(error);
+    }
+};
+
+router.post('/', newPatientParser, (req: Request<unknown, unknown, NewPatient>, res: Response<Patient>) => {
+        const addedPatient = patientService.addPatient(req.body);
+        res.json(addedPatient);
 });
+
+router.use(errorHandler);
 
 export default router;
