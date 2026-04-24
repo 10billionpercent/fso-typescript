@@ -1,16 +1,14 @@
+import Part from "./Part";
 import type { ContentAndTotalProps } from "./types";
 
 const Content = ({ courseParts }: ContentAndTotalProps) => {
     return (
         <div id='content'>
             {courseParts.map(p => (
-            <div key={p.name}>
-                <h2> {p.name} </h2>
-                <p> {p.exerciseCount} exercises </p>
-            </div>
+            <Part part={p} />
             ))}
         </div>
-    )
+    );
 }
 
 export default Content;
