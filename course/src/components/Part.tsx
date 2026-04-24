@@ -5,20 +5,32 @@ interface PartProps {
 }
 
 const Part = ({ part }: PartProps) => {
+    const assertNever = (value: never): never => {
+        throw new Error(
+            `unhandled discriminated union member ${JSON.stringify(value)}`
+        );
+    }
+
     const renderExtra = () => {
         switch (part.kind) {
             case "basic":
-                return <p>{part.description}</p>;
+                return <i>{part.description}</i>;
             case "group":
                 return <p>{part.groupProjectCount} group projects </p>;
             case "background":
                 return (
                 <>
-                    <p>{part.description}</p>
+                    <i>{part.description}</i>
                     <p>{part.backgroundMaterial}</p>
                 </>);
+            case "special":
+                return (
+                <>
+                    <i>{part.description}</i>
+                    <p>required skills = {part.requirements.join(', ')}</p>
+                </>);
             default:
-                return null;
+                return assertNever(part);
             }
     }
 

@@ -5,7 +5,7 @@ const Content = ({ courseParts }: ContentAndTotalProps) => {
     return (
         <div id='content'>
             {courseParts.map(p => (
-            <Part part={p} />
+            <Part key={p.name} part={p} />
             ))}
         </div>
     );
