@@ -7,21 +7,21 @@ const App = () => {
   const courseName = "Half Stack application development";
   const courseParts = [
     {
-      partName: "Fundamentals",
+      name: "Fundamentals",
       exerciseCount: 10
     },
     {
-      partName: "Using props to pass data",
+      name: "Using props to pass data",
       exerciseCount: 7
     },
     {
-      partName: "Deeper type usage",
+      name: "Deeper type usage",
       exerciseCount: 14
     }
   ];
 
   return (
-    <div>
+    <div id='main'>
       <Header courseName={courseName} />
       <Content courseParts={courseParts} />
       <Total courseParts={courseParts} />

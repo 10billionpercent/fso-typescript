@@ -10,3 +10,16 @@ body {
 #root {
   border: none;
 }
+
+#main {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  text-align: start;
+}
+
+#content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}

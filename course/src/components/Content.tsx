@@ -1,11 +1,11 @@
 import type { ContentAndTotalProps } from "./types";
 
-const Content = (props: ContentAndTotalProps) => {
+const Content = ({ courseParts }: ContentAndTotalProps) => {
     return (
         <div id='content'>
-            {props.courseParts.map(p => (
-            <div key={p.partName}>
-                <h2> {p.partName} </h2>
+            {courseParts.map(p => (
+            <div key={p.name}>
+                <h2> {p.name} </h2>
                 <p> {p.exerciseCount} exercises </p>
             </div>
             ))}

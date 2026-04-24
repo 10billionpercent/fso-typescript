@@ -1,5 +1,5 @@
 interface CoursePart {
-    partName: string;
+    name: string;
     exerciseCount: number;
 }
 
