@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import type { DiaryEntry } from './types'
 import diaryService from './services/diaries'
-import { Plane, Calendar, Sun, RectangleGoggles } from 'lucide-react';
+import { Plane, Calendar, Sun, RectangleGoggles, SquarePen } from 'lucide-react';
 import './App.css'
 
 function App() {
@@ -23,7 +23,7 @@ function App() {
           <h3 className='row'><Calendar /> {d.date}</h3>
           <p className='row'><Sun /><strong>Weather</strong> {d.weather}</p>
           <p className='row'><RectangleGoggles /> <strong>Visibility</strong> {d.visibility}</p>
-          <p className='row'>{d.comment}</p>
+          <p className='row'> <SquarePen /> {d.comment}</p>
         </div>
       ))}
     </div>
