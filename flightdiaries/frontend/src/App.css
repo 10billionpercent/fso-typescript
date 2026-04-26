@@ -1,0 +1,29 @@
+body {
+  background-color: black;
+  color: white;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+
+#root {
+  border: none;
+}
+
+#main {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  text-align: start;
+}
+
+h3, p {
+  margin: 0;
+}
+
+.row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
