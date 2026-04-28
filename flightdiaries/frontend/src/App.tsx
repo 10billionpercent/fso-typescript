@@ -8,7 +8,7 @@ import axios from 'axios'
 
 function App() {
   const [diaries, setDiaries] = useState<DiaryEntry[]>([])
-  const [date, setDate] = useState('')
+  const [date, setDate] = useState(new Date().toISOString().split('T')[0])
   const [weather, setWeather] = useState('')
   const [visibility, setVisibility] = useState('')
   const [comment, setComment] = useState('')
@@ -79,18 +79,36 @@ function App() {
       <Notification message={message} isError={isError} />
         <label>
           Date &nbsp;
-        <input value={date} 
-        onChange={(e) => setDate(e.target.value)} />
+          <input
+        type="date"
+        id="date"
+        name="flight-date"
+        value={date}
+        onChange={(e) => {setDate(e.target.value)}} />
         </label>
         <label>
           Weather &nbsp;
-          <input value={weather} 
-        onChange={(e) => setWeather(e.target.value)} />
+        <div className='radio-buttons'>
+          {["sunny","rainy","cloudy","stormy","windy"].map(w => (
+          <label key={w}>
+          <input type="radio" id={w} name={w} value={w} checked={weather === w}
+          onChange={() => setWeather(w)} />  
+          {w}
+          </label>
+        ))}
+        </div>
         </label>
         <label>
           Visibility &nbsp;
-           <input value={visibility} 
-        onChange={(e) => setVisibility(e.target.value)} />
+        <div className='radio-buttons'>
+        {["great","good","ok","poor"].map(v => (
+          <label key={v}>
+          <input type="radio" id={v} name={v} value={v} checked={visibility === v}
+          onChange={() => setVisibility(v)} />  
+          {v}
+          </label>
+        ))}
+        </div>
         </label>
         <label>
           Comment &nbsp;
@@ -99,6 +117,8 @@ function App() {
         </label>
         <button type='submit'> Add </button>
       </form>
+
+      <script></script>
     </div>
   )
 }

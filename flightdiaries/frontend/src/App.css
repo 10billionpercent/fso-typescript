@@ -42,3 +42,9 @@ button {
   border-radius: 0.5rem;
   font-size: 1rem;
 }
+
+.radio-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
