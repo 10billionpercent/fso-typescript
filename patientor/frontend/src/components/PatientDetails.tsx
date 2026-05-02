@@ -119,7 +119,7 @@ const PatientDetails = ({ patient, diagnoses }: Props) => {
                     <Typography variant="subtitle1">
                         {e.description}
                     </Typography>
-                    {e.diagnosisCodes ? <List sx={{ listStyleType: 'disc', pl: 4 }}>
+                    {e.diagnosisCodes && e.diagnosisCodes.length > 0 ? <List sx={{ listStyleType: 'disc', pl: 4 }}>
                         {e.diagnosisCodes.map(d => {
                             const diagnosis = diagnoses.find(di => di.code === d);
                             return (

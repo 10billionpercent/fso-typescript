@@ -91,7 +91,7 @@ const AddEntryForm = ({ onCancel, onSubmit }: Props) => {
           ))}
         </Select>
         <TextField
-          label="Diagnosis codes"
+          label="Diagnosis codes (comma separated)"
           fullWidth
           value={diagnosisCodes}
           onChange={({ target }) => setDiagnosisCodes(target.value.split(","))}
