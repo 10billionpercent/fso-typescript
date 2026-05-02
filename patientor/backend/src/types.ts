@@ -70,11 +70,11 @@ export enum Gender {
 }
 
 export const NewPatientSchema = z.object({
-    name: z.string(),
+    name: z.string().min(1),
     dateOfBirth: z.iso.date(),
-    ssn: z.string(),
+    ssn: z.string().min(1),
     gender: z.enum(Gender),
-    occupation: z.string()
+    occupation: z.string().min(1)
 });
 
 export type NewPatient = z.infer<typeof NewPatientSchema>;
@@ -82,10 +82,10 @@ export type NewPatient = z.infer<typeof NewPatientSchema>;
 export type NonSensitivePatient = Omit<Patient, 'ssn' | 'entries'>;
 
 const NewBaseSchema = z.object({
-    description: z.string(),
+    description: z.string().min(1),
     date: z.iso.date(),
-    specialist: z.string(),
-    diagnosisCodes: z.string().array().optional()
+    specialist: z.string().min(1),
+    diagnosisCodes: z.string().min(1).array().optional()
 });
 
 const NewHealthCheckSchema = NewBaseSchema.extend({
@@ -100,18 +100,18 @@ const NewHealthCheckSchema = NewBaseSchema.extend({
 
 const NewOccupationalHealthcareSchema = NewBaseSchema.extend({
     type: z.literal("OccupationalHealthcare"),
-    employerName: z.string(),
+    employerName: z.string().min(1),
     sickLeave: z.object({
-        startDate: z.string(),
-        endDate: z.string()
+        startDate: z.iso.date(),
+        endDate: z.iso.date()
     }).optional()
 });
 
 const NewHospitalSchema = NewBaseSchema.extend({
     type: z.literal("Hospital"),
     discharge: z.object({
-        date: z.string(),
-        criteria: z.string()
+        date: z.iso.date(),
+        criteria: z.string().min(1)
     })
 });
 

@@ -1,6 +1,8 @@
-import { Patient, Diagnosis, Entry, HealthCheckEntry } from "../types";
+import { useState } from "react";
+import axios from 'axios';
+import { Patient, Diagnosis, Entry, HealthCheckEntry, EntryFormValues } from "../types";
 
-import { Container, Typography, List, ListItem, ListItemText } from '@mui/material';
+import { Container, Typography, List, ListItem, ListItemText, Button } from '@mui/material';
 import FemaleIcon from '@mui/icons-material/Female';
 import TransgenderIcon from '@mui/icons-material/Transgender';
 import MaleIcon from '@mui/icons-material/Male';
@@ -10,12 +12,48 @@ import WorkIcon from '@mui/icons-material/Work';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { red, orange, green, yellow } from '@mui/material/colors';
 
+import AddEntryModal from "./AddEntryModal";
+
+import patientService from "../services/patients";
+
 interface Props {
   patient : Patient,
   diagnoses : Diagnosis[]
 }
 
 const PatientDetails = ({ patient, diagnoses }: Props) => {
+    const [modalOpen, setModalOpen] = useState<boolean>(false);
+    const [error, setError] = useState<string>();
+    const [entries, setEntries] = useState<Entry[]>(patient.entries);
+
+    const openModal = (): void => setModalOpen(true);
+
+    const closeModal = (): void => {
+    setModalOpen(false);
+    setError(undefined);
+    };
+
+  const submitNewEntry = async (values: EntryFormValues) => {
+    try {
+      const entry = await patientService.createEntry(values, patient.id);
+      setEntries(prev => prev.concat(entry));
+      setModalOpen(false);
+    } catch (e: unknown) {
+      if (axios.isAxiosError(e)) {
+        const data = e.response?.data; 
+        if (data && typeof data === "object" && "error" in data) {
+            const messages = data.error.map((err: { message: string, path: string[] }) => `${err.path} - ${err.message}`).join("\n");
+            setError(messages);
+        } else {
+          setError("Unrecognized axios error");
+        }
+      } else {
+        console.error("Unknown error", e);
+        setError("Unknown error");
+      }
+    }
+  };
+
     const assertNever = (value: never): never => {
         throw new Error(
             `unhandled discriminated union member ${JSON.stringify(value)}`
@@ -70,7 +108,7 @@ const PatientDetails = ({ patient, diagnoses }: Props) => {
             <Typography variant="h3">
                 entries
             </Typography>
-            {patient.entries.length !== 0 ? patient.entries.map(e => (
+            {entries.length !== 0 ? entries.map(e => (
                 <Container key={e.id} sx={{ pb: '1rem' }} disableGutters>
                     <Typography variant="subtitle1" 
                     sx={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -98,6 +136,15 @@ const PatientDetails = ({ patient, diagnoses }: Props) => {
                 </Container>
             )) 
             : <Typography variant="subtitle1"> no entries </Typography>}
+                  <AddEntryModal
+        modalOpen={modalOpen}
+        onSubmit={submitNewEntry}
+        error={error}
+        onClose={closeModal}
+      />
+      <Button variant="contained" onClick={() => openModal()}>
+        Add New Entry
+      </Button>
         </Container>
     );
 };

@@ -1,6 +1,6 @@
 import { useState, SyntheticEvent } from "react";
 
-import {  TextField, InputLabel, MenuItem, Select, Grid, Button, SelectChangeEvent } from '@mui/material';
+import { TextField, InputLabel, MenuItem, Select, Grid, Button, SelectChangeEvent } from '@mui/material';
 
 import { PatientFormValues, Gender } from "../../types";
 
@@ -27,7 +27,7 @@ const AddPatientForm = ({ onCancel, onSubmit }: Props) => {
 
   const onGenderChange = (event: SelectChangeEvent<string>) => {
     event.preventDefault();
-    if ( typeof event.target.value === "string") {
+    if (typeof event.target.value === "string") {
       const value = event.target.value;
       const gender = Object.values(Gender).find(g => g.toString() === value);
       if (gender) {
