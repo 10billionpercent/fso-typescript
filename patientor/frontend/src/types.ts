@@ -27,7 +27,7 @@ const HealthCheckRating = {
 
 type HealthCheckRating = typeof HealthCheckRating[keyof typeof HealthCheckRating];
 
-interface HealthCheckEntry extends BaseEntry {
+export interface HealthCheckEntry extends BaseEntry {
   type: "HealthCheck";
   healthCheckRating: HealthCheckRating;
 }
