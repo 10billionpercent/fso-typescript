@@ -65,7 +65,7 @@ const App = () => {
           <Typography variant="h3" sx={{ marginBottom: "0.5em" }}>
             Patientor
           </Typography>
-          <Button component={Link} to="/" variant="contained" color="primary">
+          <Button component={Link} to="/" variant="contained" color="primary" style={{ color: '#000000de'}}>
             Home
           </Button>
           <Divider sx={{ marginY: 2 }} />
