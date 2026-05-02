@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
+import { Route, Link, Routes, useMatch } from "react-router-dom";
 import { Button, Divider, Container, Typography } from '@mui/material';
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -11,7 +11,7 @@ import { Patient } from "./types";
 
 import patientService from "./services/patients";
 import PatientListPage from "./components/PatientListPage";
-
+import PatientDetails from "./components/PatientDetails";
 
 const darkTheme = createTheme({
   palette: {
@@ -24,6 +24,7 @@ const darkTheme = createTheme({
 
 const App = () => {
   const [patients, setPatients] = useState<Patient[]>([]);
+  const [patient, setPatient] = useState<Patient | null>(null);
 
   useEffect(() => {
     void axios.get<void>(`${apiBaseUrl}/ping`);
@@ -34,12 +35,23 @@ const App = () => {
     };
     void fetchPatientList();
   }, []);
+
+  const match = useMatch('/:id');
+
+  useEffect(() => {
+    const fetchPatient = async () => {
+    if (match && match.params.id) {
+    const fetchedPatient = await patientService.getPatient(match.params.id);
+    setPatient(fetchedPatient);
+    }
+  };
+  void fetchPatient();
+  }, [match]);
   
   return (
     <ThemeProvider theme={darkTheme}>
     <CssBaseline />
     <div className="App" style={{ "paddingTop": "3rem"}}>
-      <Router>
         <Container>
           <Typography variant="h3" sx={{ marginBottom: "0.5em" }}>
             Patientor
@@ -50,9 +62,9 @@ const App = () => {
           <Divider sx={{ marginY: 2 }} />
           <Routes>
             <Route path="/" element={<PatientListPage patients={patients} setPatients={setPatients} />} />
+            <Route path="/:id" element={patient ? <PatientDetails patient={patient}/> : null}/>
           </Routes>
         </Container>
-      </Router>
     </div>
     </ThemeProvider>
   );
