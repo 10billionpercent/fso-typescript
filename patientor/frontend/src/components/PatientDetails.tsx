@@ -1,4 +1,4 @@
-import { Patient } from "../types";
+import { Patient, Diagnosis } from "../types";
 
 import { Container, Typography, List, ListItem, ListItemText } from '@mui/material';
 import FemaleIcon from '@mui/icons-material/Female';
@@ -6,10 +6,11 @@ import TransgenderIcon from '@mui/icons-material/Transgender';
 import MaleIcon from '@mui/icons-material/Male';
 
 interface Props {
-  patient : Patient
+  patient : Patient,
+  diagnoses : Diagnosis[]
 }
 
-const PatientDetails = ({ patient }: Props) => {
+const PatientDetails = ({ patient, diagnoses }: Props) => {
     return (
         <Container disableGutters>
             <Typography variant="h2">
@@ -25,7 +26,7 @@ const PatientDetails = ({ patient }: Props) => {
                 occupation = {patient.occupation}
             </Typography>
             <Typography variant="subtitle1">
-                date of birth = {patient.ssn}
+                date of birth = {patient.dateOfBirth}
             </Typography>
             <Typography variant="h3">
                 entries
@@ -39,10 +40,15 @@ const PatientDetails = ({ patient }: Props) => {
                         {e.description}
                     </Typography>
                     <List sx={{ listStyleType: 'disc', pl: 4 }}>
-                        {e.diagnosisCodes?.map(d => (                        
-                        <ListItem key={d} sx={{ display: 'list-item', p: 0 }}>
-                            <ListItemText primary={d}></ListItemText>
-                        </ListItem>))}
+                        {e.diagnosisCodes?.map(d => {
+                            const diagnosis = diagnoses.find(di => di.code === d);
+                            return (
+                            <ListItem key={d} sx={{ display: 'list-item', p: 0 }}>
+                               <ListItemText primary={d} 
+                               secondary={diagnosis ? diagnosis.name : "unknown"}>
+                               </ListItemText>
+                            </ListItem>
+                            );})}
                     </List>
                 </Container>
             )) 

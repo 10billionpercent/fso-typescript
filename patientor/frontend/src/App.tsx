@@ -7,9 +7,10 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 
 import { apiBaseUrl } from "./constants";
-import { Patient } from "./types";
+import { Patient, Diagnosis } from "./types";
 
 import patientService from "./services/patients";
+import diagnosisService from "./services/diagnoses";
 import PatientListPage from "./components/PatientListPage";
 import PatientDetails from "./components/PatientDetails";
 
@@ -25,15 +26,23 @@ const darkTheme = createTheme({
 const App = () => {
   const [patients, setPatients] = useState<Patient[]>([]);
   const [patient, setPatient] = useState<Patient | null>(null);
+  const [diagnoses, setDiagnoses] = useState<Diagnosis[]>([]);
 
   useEffect(() => {
     void axios.get<void>(`${apiBaseUrl}/ping`);
 
     const fetchPatientList = async () => {
-      const patients = await patientService.getAll();
+      const patients = await patientService.getAllPatients();
       setPatients(patients);
     };
+
+    const fetchDiagnosisList = async () => {
+      const diagnoses = await diagnosisService.getAllDiagnoses();
+      setDiagnoses(diagnoses);
+    };
+
     void fetchPatientList();
+    void fetchDiagnosisList();
   }, []);
 
   const match = useMatch('/:id');
@@ -62,7 +71,7 @@ const App = () => {
           <Divider sx={{ marginY: 2 }} />
           <Routes>
             <Route path="/" element={<PatientListPage patients={patients} setPatients={setPatients} />} />
-            <Route path="/:id" element={patient ? <PatientDetails patient={patient}/> : null}/>
+            <Route path="/:id" element={patient ? <PatientDetails patient={patient} diagnoses={diagnoses}/> : null}/>
           </Routes>
         </Container>
     </div>
