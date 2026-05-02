@@ -80,3 +80,41 @@ export const NewPatientSchema = z.object({
 export type NewPatient = z.infer<typeof NewPatientSchema>;
 
 export type NonSensitivePatient = Omit<Patient, 'ssn' | 'entries'>;
+
+const NewBaseSchema = z.object({
+    description: z.string(),
+    date: z.iso.date(),
+    specialist: z.string(),
+    diagnosisCodes: z.string().array().optional()
+});
+
+const NewHealthCheckSchema = NewBaseSchema.extend({
+    type: z.literal("HealthCheck"),
+    healthCheckRating: z.union([
+                       z.literal(HealthCheckRating.Healthy),
+                       z.literal(HealthCheckRating.LowRisk),
+                       z.literal(HealthCheckRating.HighRisk),
+                       z.literal(HealthCheckRating.CriticalRisk),
+    ])
+});
+
+const NewOccupationalHealthcareSchema = NewBaseSchema.extend({
+    type: z.literal("OccupationalHealthcare"),
+    employerName: z.string(),
+    sickLeave: z.object({
+        startDate: z.string(),
+        endDate: z.string()
+    }).optional()
+});
+
+const NewHospitalSchema = NewBaseSchema.extend({
+    type: z.literal("Hospital"),
+    discharge: z.object({
+        date: z.string(),
+        criteria: z.string()
+    })
+});
+
+export const NewEntrySchema = z.discriminatedUnion("type", [NewHealthCheckSchema, NewOccupationalHealthcareSchema, NewHospitalSchema]);
+
+export type NewEntry = z.infer<typeof NewEntrySchema>;
