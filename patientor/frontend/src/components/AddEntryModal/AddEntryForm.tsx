@@ -2,21 +2,24 @@ import { useState, SyntheticEvent } from "react";
 import { assertNever } from "../../utils";
 
 import {
-  TextField,
+  FormControl,
   InputLabel,
-  MenuItem,
   Select,
+  TextField,
+  MenuItem,
   Grid,
   Button,
-  SelectChangeEvent,
+  SelectChangeEvent
 } from "@mui/material";
 
 import { EntryFormValues, HealthCheckRatings } from "../../types";
-import type { HealthCheckRating, EntryType } from "../../types";
+import type { HealthCheckRating, EntryType, Diagnosis } from "../../types";
 
 interface Props {
   onCancel: () => void;
   onSubmit: (values: EntryFormValues) => void;
+  clearError: () => void;
+  diagnoses: Diagnosis[]
 }
 
 interface HealthCheckRatingOption {
@@ -29,12 +32,12 @@ interface TypeOption {
   label: string;
 }
 
-const healthCheckRatingOptions: HealthCheckRatingOption[] = Object.values(
-  HealthCheckRatings,
-).map((v) => ({
-  value: v,
-  label: v.toString(),
-}));
+const healthCheckRatingOptions: HealthCheckRatingOption[] = [
+  { value: 0, label: 'Healthy'},
+  { value: 1, label: 'Low Risk'},
+  { value: 2, label: 'High Risk'},
+  { value: 3, label: 'Critical Risk'}
+];
 
 const typeOptions: TypeOption[] = [
   { value: "HealthCheck", label: "Health Check"},
@@ -42,7 +45,7 @@ const typeOptions: TypeOption[] = [
   { value: "Hospital", label: "Hospital"}
 ];
 
-const AddEntryForm = ({ onCancel, onSubmit }: Props) => {
+const AddEntryForm = ({ onCancel, onSubmit, clearError, diagnoses }: Props) => {
   const [type, setType] = useState<EntryType>("HealthCheck");
   const [date, setDate] = useState("");
   const [description, setDescription] = useState("");
@@ -55,28 +58,33 @@ const AddEntryForm = ({ onCancel, onSubmit }: Props) => {
   const [dischargeCriteria, setDischargeCriteria] = useState("");
   const [diagnosisCodes, setDiagnosisCodes] = useState<string[]>([]);
 
-  const onTypeChange = (event: SelectChangeEvent<string>) => {
+  const onTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     setType(event.target.value as EntryType);
+    clearError();
+  };
+
+  const onDiagnosisCodesChange = (event: SelectChangeEvent<string[]>) => {
+    const { target: { value }} = event;
+    setDiagnosisCodes(typeof value === 'string' ? value.split(",") : value);
   };
 
   const extraFields = (type: EntryType) => {
         switch (type) {
             case "HealthCheck":
-                return (<>   
-          <InputLabel sx={{ marginTop: 2 }}>Health Check Rating</InputLabel>
-          <Select<number>
+                return  <TextField
+          select
           label="Health Check Rating"
           fullWidth
           value={healthCheckRating}
           onChange={onHealthCheckRatingChange}
-        >
+          sx={{ marginTop: 2 }}>
           {healthCheckRatingOptions.map((option) => (
             <MenuItem key={option.label} value={option.value}>
-              {option.label}
+              {option.value} - {option.label}
             </MenuItem>
           ))}
-        </Select></>);
+        </TextField>;
             case "OccupationalHealthcare":
                 return (<>
         <TextField
@@ -87,28 +95,34 @@ const AddEntryForm = ({ onCancel, onSubmit }: Props) => {
           sx={{ marginTop: 2 }}
         />
         <TextField
+          type="date"
           label="Sick Leave Start Date"
           fullWidth
           value={sickLeaveStartDate}
           onChange={({ target }) => setSickLeaveStartDate(target.value)}
           sx={{ marginTop: 2 }}
+          slotProps={{ inputLabel: { shrink: true } }}
         />
         <TextField
+          type="date"
           label="Sick Leave End Date"
           fullWidth
           value={sickLeaveEndDate}
           onChange={({ target }) => setSickLeaveEndDate(target.value)}
           sx={{ marginTop: 2 }}
+          slotProps={{ inputLabel: { shrink: true } }}
         />
       </>);
             case "Hospital":
                 return (<>
       <TextField
+          type="date"
           label="Discharge Date"
           fullWidth
           value={dischargeDate}
           onChange={({ target }) => setDischargeDate(target.value)}
           sx={{ marginTop: 2 }}
+          slotProps={{ inputLabel: { shrink: true } }}
         />
       <TextField
           label="Discharge Criteria"
@@ -123,7 +137,7 @@ const AddEntryForm = ({ onCancel, onSubmit }: Props) => {
             }
     };
 
-  const onHealthCheckRatingChange = (event: SelectChangeEvent<number>) => {
+  const onHealthCheckRatingChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     setHealthCheckRating(Number(event.target.value) as HealthCheckRating);
   };
@@ -173,8 +187,8 @@ const AddEntryForm = ({ onCancel, onSubmit }: Props) => {
   return (
     <div>
       <form onSubmit={addEntry}>
-        <InputLabel sx={{ marginTop: 2 }}>Entry Type</InputLabel>
-        <Select<string>
+        <TextField
+          select
           label="Entry Type"
           fullWidth
           value={type}
@@ -185,13 +199,15 @@ const AddEntryForm = ({ onCancel, onSubmit }: Props) => {
               {option.label}
             </MenuItem>
           ))}
-        </Select>
+        </TextField>
         <TextField
-          label="Date"
+          label="Entry Date"
+          type="date"
           fullWidth
           value={date}
           onChange={({ target }) => setDate(target.value)}
           sx={{ marginTop: 2 }}
+          slotProps={{ inputLabel: { shrink: true } }}
         />
         <TextField
           label="Description"
@@ -208,13 +224,22 @@ const AddEntryForm = ({ onCancel, onSubmit }: Props) => {
           sx={{ marginTop: 2 }}
         />
         {extraFields(type)}
-        <TextField
-          label="Diagnosis codes (comma separated)"
+        <FormControl fullWidth sx={{ marginTop: 2 }}>
+          <InputLabel id="diagnosis-codes"> Diagnosis Codes </InputLabel>
+        <Select
+          multiple
+          label="Diagnosis codes"
           fullWidth
           value={diagnosisCodes}
-          onChange={({ target }) => setDiagnosisCodes(target.value.split(","))}
-          sx={{ marginTop: 2 }}
-        />
+          onChange={onDiagnosisCodesChange}
+          renderValue={(selected) => selected.filter(Boolean).join(", ")}>
+          {diagnoses.map(d => (
+            <MenuItem key={d.code} value={d.code}>
+              {`${d.code} - ${d.name}`}
+            </MenuItem>
+          ))}
+          </Select>
+          </FormControl>
 
         <Grid container justifyContent="space-between" sx={{ marginTop: 2 }}>
           <Grid size="auto">

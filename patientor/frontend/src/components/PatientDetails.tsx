@@ -139,6 +139,8 @@ const PatientDetails = ({ patient, diagnoses }: Props) => {
         onSubmit={submitNewEntry}
         error={error}
         onClose={closeModal}
+        clearError={() => setError(undefined)}
+        diagnoses={diagnoses}
       />
       <Button variant="contained" onClick={() => openModal()}>
         Add New Entry
