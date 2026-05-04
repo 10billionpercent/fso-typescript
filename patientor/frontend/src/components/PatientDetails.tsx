@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from 'axios';
 import { Patient, Diagnosis, Entry, HealthCheckEntry, EntryFormValues } from "../types";
+import { assertNever } from "../utils";
 
 import { Container, Typography, List, ListItem, ListItemText, Button } from '@mui/material';
 import FemaleIcon from '@mui/icons-material/Female';
@@ -26,7 +27,10 @@ const PatientDetails = ({ patient, diagnoses }: Props) => {
     const [error, setError] = useState<string>();
     const [entries, setEntries] = useState<Entry[]>(patient.entries);
 
-    const openModal = (): void => setModalOpen(true);
+    const openModal = (): void => {
+        setModalOpen(true);
+        setError(undefined);
+    };
 
     const closeModal = (): void => {
     setModalOpen(false);
@@ -53,12 +57,6 @@ const PatientDetails = ({ patient, diagnoses }: Props) => {
       }
     }
   };
-
-    const assertNever = (value: never): never => {
-        throw new Error(
-            `unhandled discriminated union member ${JSON.stringify(value)}`
-        );
-    };
 
     const entryTypeIcon = (entry: Entry) => {
         switch (entry.type) {
