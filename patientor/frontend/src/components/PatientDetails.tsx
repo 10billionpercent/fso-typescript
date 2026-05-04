@@ -131,6 +131,10 @@ const PatientDetails = ({ patient, diagnoses }: Props) => {
                     <Typography variant="subtitle1">
                         diagnosed by {e.specialist}
                     </Typography>
+                    {e.type === 'Hospital' ? 
+                    <Typography variant="subtitle1">
+                        discharged on {e.discharge.date} as {e.discharge.criteria}
+                    </Typography> : null}
                 </Container>
             )) 
             : <Typography variant="subtitle1"> no entries </Typography>}

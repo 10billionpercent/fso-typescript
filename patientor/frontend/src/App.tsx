@@ -45,7 +45,7 @@ const App = () => {
     void fetchDiagnosisList();
   }, []);
 
-  const match = useMatch('/:id');
+  const match = useMatch('/patients/:id');
 
   useEffect(() => {
     const fetchPatient = async () => {
@@ -71,7 +71,7 @@ const App = () => {
           <Divider sx={{ marginY: 2 }} />
           <Routes>
             <Route path="/" element={<PatientListPage patients={patients} setPatients={setPatients} />} />
-            <Route path="/:id" element={patient ? <PatientDetails patient={patient} diagnoses={diagnoses}/> : null}/>
+            <Route path="/patients/:id" element={patient ? <PatientDetails patient={patient} diagnoses={diagnoses}/> : null}/>
           </Routes>
         </Container>
     </div>
